@@ -124,8 +124,6 @@ export default class Game {
         this.animateTargets();
 
         const gameDuration = 1000 * 60 // 60 Seconds in milliseconds.
-        setTimeout(() => {
-            this.canvas.removeEventListener('mousedown', this.clickHandle);
         setTimeout(this.endGame.bind(this), gameDuration);
     }
 
