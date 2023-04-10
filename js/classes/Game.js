@@ -24,6 +24,8 @@ export default class Game {
         this.currentTime = null;
 
         this.updateCanvasSize();
+
+        window.addEventListener('resize', this.updateCanvasSize.bind(this));
     }
 
     /**
@@ -32,6 +34,16 @@ export default class Game {
     updateCanvasSize() {
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
+
+        // Ensure all targets remain on canvas in case of resize
+        // TODO: Update Targets to calculate x & y as percentages of their X and Y position,
+        //       so that Targets do not become bunched when scaling down the window
+        this.targets.forEach((target) => {
+            if (target.x + target.radius > this.canvas.width)
+                target.x = this.canvas.width - target.radius;
+            if (target.y + target.radius > this.canvas.height)
+                target.y = this.canvas.height - target.radius;
+        });
     }
 
     /**
