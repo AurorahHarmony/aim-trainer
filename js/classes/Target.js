@@ -42,7 +42,7 @@ export default class Target {
      * Generates a new random dx and dy.
      */
     generateNewDeltas() {
-        const speed = 3;
+        const speed = 300;
         this.dx = Utility.getRandomInt(-speed, speed);
 
         const remainderSpeed = speed - Math.abs(this.dx);
@@ -51,10 +51,11 @@ export default class Target {
 
     /**
      * Updates the stored position of the dot, based on its movement configuration.
+     * @param {number} deltaTime
      */
-    updatePosition() {
-        this.x += this.dx;
-        this.y += this.dy;
+    updatePosition(deltaTime) {
+        this.x += (this.dx * deltaTime);
+        this.y += (this.dy * deltaTime);
 
         if (this.x - this.radius < 0 || this.x + this.radius > this.canvas.width) {
             this.dx = -this.dx;

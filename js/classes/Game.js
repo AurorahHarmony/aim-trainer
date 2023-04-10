@@ -17,6 +17,10 @@ export default class Game {
         this.gameState = states.LOADING;
         this.targets = [];
 
+        // For deltatime
+        this.lastTime = null;
+        this.currentTime = null;
+
         this.updateCanvasSize();
     }
 
@@ -43,15 +47,20 @@ export default class Game {
      * Moves the targets around the screen.
      */
     animateTargets() {
+        this.currentTime = new Date().getTime();
+        const deltaTime = (this.currentTime - this.lastTime) / 1000;
+
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.targets.forEach(target => {
-            target.updatePosition();
+        this.targets.forEach(function (target) {
+            target.updatePosition(deltaTime);
             target.draw();
         });
 
         if (this.gameState === states.PLAYING) {
             requestAnimationFrame(this.animateTargets.bind(this));
         }
+
+        this.lastTime = this.currentTime;
     }
 
     /**
@@ -64,6 +73,7 @@ export default class Game {
 
         this.gameState = states.PLAYING;
 
+        this.lastTime = new Date().getTime(); // Required to prevent delta time being enormous on first load.
         this.animateTargets();
 
         const gameDuration = 1000 * 60 // 60 Seconds in milliseconds.
