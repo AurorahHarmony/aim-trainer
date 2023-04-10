@@ -14,6 +14,7 @@ export default class Game {
     constructor(canvas) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
+        this.canvas.offscreen = {}; // Initialised so that actors can pre-render
 
         this.gameState = states.LOADING;
         this.handles = {};

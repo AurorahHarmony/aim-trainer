@@ -21,21 +21,38 @@ export default class Target {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
 
+        this.preRender();
+
         this.generateNewDeltas();
+    }
+
+    /**
+     * Generate the target dot in an offscreen canvas
+     * This uses the offscreen canvas so that only one instance needs to draw the initial dot
+     */
+    preRender() {
+        if (!this.canvas.offscreen.target) {
+            this.canvas.offscreen.target = document.createElement('canvas');
+            this.canvas.offscreen.target.width = this.radius * 2;
+            this.canvas.offscreen.target.height = this.radius * 2;
+
+            const ctx = this.canvas.offscreen.target.getContext('2d');
+            ctx.beginPath();
+            ctx.arc(this.radius, this.radius, this.radius, 0, Math.PI * 2, false);
+            ctx.fillStyle = "#F22";
+            ctx.strokeStyle = "#600";
+            ctx.lineWidth = 2;
+            ctx.fill();
+            ctx.closePath();
+            ctx.stroke();
+        }
     }
 
     /**
      * Draw the target dot.
      */
     draw() {
-        this.ctx.beginPath();
-        this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-        this.ctx.fillStyle = "#F22";
-        this.ctx.strokeStyle = "#600";
-        this.ctx.lineWidth = 2;
-        this.ctx.fill();
-        this.ctx.closePath();
-        this.ctx.stroke();
+        this.ctx.drawImage(this.canvas.offscreen.target, this.x - this.radius, this.y - this.radius);
     }
 
     /**
