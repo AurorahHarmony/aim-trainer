@@ -58,6 +58,11 @@ export default class Game {
         this.targets.push(target);
     }
 
+    // Remove all drawings from canvas
+    clearCanvas() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
     /**
      * Moves the targets around the screen.
      */
@@ -65,7 +70,8 @@ export default class Game {
         this.currentTime = new Date().getTime();
         const deltaTime = (this.currentTime - this.lastTime) / 1000;
 
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.clearCanvas();
+
         this.targets.forEach(function (target) {
             target.updatePosition(deltaTime);
             target.draw();
@@ -131,6 +137,8 @@ export default class Game {
         delete this.handles.clickHandle;
 
         this.gameState = states.ENDED;
+        requestAnimationFrame(this.clearCanvas.bind(this));
+
         console.log(this.score.stats());
     }
 }
