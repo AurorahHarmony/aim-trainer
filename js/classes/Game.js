@@ -1,6 +1,7 @@
 /**
  * Game class definition.
  */
+import Score from './Score.js';
 import Target from './Target.js';
 import Utility from './Utility.js';
 
@@ -16,6 +17,7 @@ export default class Game {
 
         this.gameState = states.LOADING;
         this.targets = [];
+        this.score = new Score();
 
         // For deltatime
         this.lastTime = null;
@@ -77,8 +79,10 @@ export default class Game {
         });
 
         if (hitIndex >= 0) {
-            this.targets.splice(hitIndex, 1);
+            this.score.registerHit();
+            return this.targets.splice(hitIndex, 1);
         }
+        this.score.registerMiss();
 
     }
 
@@ -86,6 +90,8 @@ export default class Game {
      * Start the game.
      */
     startGame() {
+        this.score.reset();
+
         for (let i = 0; i < 100; i++) {
             this.generateTarget();
         }
@@ -100,6 +106,8 @@ export default class Game {
         const gameDuration = 1000 * 60 // 60 Seconds in milliseconds.
         setTimeout(() => {
             this.canvas.removeEventListener('mousedown', this.clickHandle);
+            this.gameState = states.ENDED;
+            console.log(this.score.stats());
         }, gameDuration);
     }
 }
