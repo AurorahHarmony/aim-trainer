@@ -14,6 +14,9 @@ export default class Game {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
 
+        this.gameState = states.LOADING;
+        this.targets = [];
+
         this.updateCanvasSize();
     }
 
@@ -25,12 +28,30 @@ export default class Game {
         this.canvas.height = window.innerHeight;
     }
 
+    /**
+     * Initialises a new randomly positioned Target instance and stores it in the Targets array.
+     */
     generateTarget() {
         const radius = 10;
         const x = Utility.getRandomInt(radius, this.canvas.width - radius);
         const y = Utility.getRandomInt(radius, this.canvas.height - radius);
         const target = new Target(x, y, radius, this.canvas);
-        target.draw();
+        this.targets.push(target);
+    }
+
+    /**
+     * Moves the targets around the screen.
+     */
+    animateTargets() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.targets.forEach(target => {
+            target.updatePosition();
+            target.draw();
+        });
+
+        if (this.gameState === states.PLAYING) {
+            requestAnimationFrame(this.animateTargets.bind(this));
+        }
     }
 
     /**
@@ -40,5 +61,23 @@ export default class Game {
         for (let i = 0; i < 500; i++) {
             this.generateTarget();
         }
+
+        this.gameState = states.PLAYING;
+
+        this.animateTargets();
+
+        const gameDuration = 1000 * 60 // 60 Seconds in milliseconds.
+        setTimeout(() => {
+            this.gameState = states.ENDED
+        }, gameDuration);
     }
+}
+
+/**
+ * Value mappings for possible game states.
+ */
+const states = {
+    'LOADING': 'loading',
+    'PLAYING': 'playing',
+    'ENDED': 'ended'
 }
