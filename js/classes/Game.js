@@ -118,10 +118,13 @@ export default class Game {
 
         if (hitIndex >= 0) {
             this.score.registerHit();
-            return this.targets.splice(hitIndex, 1);
+            this.targets.splice(hitIndex, 1);
+        } else {
+            this.score.registerMiss();
         }
-        this.score.registerMiss();
-
+        if (this.targets.length <= 0) {
+            this.endGame();
+        }
     }
 
     /**
