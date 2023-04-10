@@ -129,7 +129,7 @@ export default class Game {
      */
     startGame() {
         this.score.reset();
-
+        this.targets = [];
         for (let i = 0; i < this.targetCount; i++) {
             this.generateTarget();
         }
