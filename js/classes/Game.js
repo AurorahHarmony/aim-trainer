@@ -14,7 +14,11 @@ export default class Game {
     constructor(canvas) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
-        this.canvas.offscreen = {}; // Initialised so that actors can pre-render
+
+        // Buffer canvas for smoothing rendering
+        this.bufferCanvas = document.createElement('canvas');
+        this.bufferCanvasCtx = this.bufferCanvas.getContext('2d');
+        this.bufferCanvas.offscreen = {}; // Initialised so that actors can pre-render
 
         this.gameState = states.LOADING;
         this.handles = {};
@@ -36,6 +40,8 @@ export default class Game {
     updateCanvasSize() {
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
+        this.bufferCanvas.width = window.innerWidth;
+        this.bufferCanvas.height = window.innerHeight;
 
         // Ensure all targets remain on canvas in case of resize
         // TODO: Update Targets to calculate x & y as percentages of their X and Y position,
@@ -53,9 +59,9 @@ export default class Game {
      */
     generateTarget() {
         const radius = 10;
-        const x = Utility.getRandomInt(radius, this.canvas.width - radius);
-        const y = Utility.getRandomInt(radius, this.canvas.height - radius);
-        const target = new Target(x, y, radius, this.canvas);
+        const x = Utility.getRandomInt(radius, this.bufferCanvas.width - radius);
+        const y = Utility.getRandomInt(radius, this.bufferCanvas.height - radius);
+        const target = new Target(x, y, radius, this.bufferCanvas);
         this.targets.push(target);
     }
 
@@ -71,12 +77,16 @@ export default class Game {
         this.currentTime = new Date().getTime();
         const deltaTime = (this.currentTime - this.lastTime) / 1000;
 
-        this.clearCanvas();
+        // Clear buffer canvas
+        this.bufferCanvasCtx.clearRect(0, 0, this.bufferCanvas.width, this.bufferCanvas.height);
 
         this.targets.forEach(function (target) {
             target.updatePosition(deltaTime);
             target.draw();
         });
+
+        this.clearCanvas();
+        this.ctx.drawImage(this.bufferCanvas, 0, 0);
 
         if (this.gameState === states.PLAYING) {
             requestAnimationFrame(this.animateTargets.bind(this));
