@@ -28,6 +28,9 @@ export default class Game {
 
         this.menus = new Menus(this);
 
+        this.targetSpeed = 10;
+        this.targetCount = 10;
+
         // For deltatime
         this.lastTime = null;
         this.currentTime = null;
@@ -66,7 +69,7 @@ export default class Game {
         const radius = 10;
         const x = Utility.getRandomInt(radius, this.bufferCanvas.width - radius);
         const y = Utility.getRandomInt(radius, this.bufferCanvas.height - radius);
-        const target = new Target(x, y, radius, this.bufferCanvas);
+        const target = new Target(x, y, radius, this.targetSpeed, this.bufferCanvas);
         this.targets.push(target);
     }
 
@@ -127,7 +130,7 @@ export default class Game {
     startGame() {
         this.score.reset();
 
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < this.targetCount; i++) {
             this.generateTarget();
         }
 
@@ -139,7 +142,7 @@ export default class Game {
         this.lastTime = new Date().getTime(); // Required to prevent delta time being enormous on first load.
         this.animateTargets();
 
-        const gameDuration = 1000 * 6 // 60 Seconds in milliseconds.
+        const gameDuration = 1000 * 60 // 60 Seconds in milliseconds.
         setTimeout(this.endGame.bind(this), gameDuration);
     }
 

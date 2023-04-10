@@ -19,7 +19,12 @@ export default class Menus {
         const startButton = this.start.querySelector('[name="start"]');
 
         startButton.addEventListener('click', () => {
+            const targetCount = this.start.querySelector('[name="targetCount"]').value;
+            const speed = this.start.querySelector('[name="speed"]').value;
+
             this.start.style.display = 'none';
+            this.game.targetCount = targetCount;
+            this.game.targetSpeed = speed;
             this.game.startGame();
         });
     }

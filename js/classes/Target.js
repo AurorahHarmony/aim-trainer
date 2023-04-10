@@ -12,12 +12,13 @@ export default class Target {
      * @param {number} radius Radius of the target
      * @param {HTMLCanvasElement} canvas
      */
-    constructor(x, y, radius, canvas) {
+    constructor(x, y, radius, speed, canvas) {
         this.x = x;
         this.y = y;
         this.dx = 0;
         this.dy = 0;
         this.radius = radius;
+        this.speed = speed * 10;
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
 
@@ -59,14 +60,13 @@ export default class Target {
      * Generates a new random dx and dy.
      */
     generateNewDeltas() {
-        const speed = 300;
-        this.dx = Utility.getRandomInt(-speed, speed);
+        this.dx = Utility.getRandomInt(-this.speed, this.speed);
 
-        const remainderSpeed = speed - Math.abs(this.dx);
+        const remainderSpeed = this.speed - Math.abs(this.dx);
         this.dy = (Math.random() < 0.5) ? -remainderSpeed : remainderSpeed; // Randomly decide whether dy should be negative.
     }
 
-    /**
+    /** 
      * Check if the target has moved past a boundary, and set its delta to the opposite direction
      */
     checkBoundary() {
