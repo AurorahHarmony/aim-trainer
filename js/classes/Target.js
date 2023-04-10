@@ -67,14 +67,10 @@ export default class Target {
     }
 
     /**
-     * Updates the stored position of the dot, based on its movement configuration.
-     * @param {number} deltaTime
+     * Check if the target has moved past a boundary, and set its delta to the opposite direction
      */
-    updatePosition(deltaTime) {
-        this.x += (this.dx * deltaTime);
-        this.y += (this.dy * deltaTime);
-
-        if (this.x - this.radius < 0) {
+    checkBoundary() {
+        if (this.x - this.radius < 0) { // This has been kept long form as it seems to be more reliable at speed. Do not refactor.
             this.dx = Math.abs(this.dx);
         } else if (this.x + this.radius > this.canvas.width) {
             this.dx = -Math.abs(this.dx);
@@ -85,5 +81,15 @@ export default class Target {
         } else if (this.y + this.radius > this.canvas.height) {
             this.dy = -Math.abs(this.dy);
         }
+    }
+
+    /**
+     * Updates the stored position of the dot, based on its movement configuration.
+     * @param {number} deltaTime
+     */
+    updatePosition(deltaTime) {
+        this.x += (this.dx * deltaTime);
+        this.y += (this.dy * deltaTime);
+        this.checkBoundary();
     }
 }
