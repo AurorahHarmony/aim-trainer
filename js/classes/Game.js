@@ -64,12 +64,33 @@ export default class Game {
     }
 
     /**
+     * Handle clickevents during gameplay
+     */
+    clickHandle(e) {
+        const rect = this.canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const hitIndex = this.targets.findIndex(target => {
+            const distance = Math.sqrt(Math.pow(x - target.x, 2) + Math.pow(y - target.y, 2));
+            return distance <= target.radius;
+        });
+
+        if (hitIndex >= 0) {
+            this.targets.splice(hitIndex, 1);
+        }
+
+    }
+
+    /**
      * Start the game.
      */
     startGame() {
-        for (let i = 0; i < 500; i++) {
+        for (let i = 0; i < 100; i++) {
             this.generateTarget();
         }
+
+        this.canvas.addEventListener('mousedown', this.clickHandle.bind(this));
 
         this.gameState = states.PLAYING;
 
@@ -78,7 +99,7 @@ export default class Game {
 
         const gameDuration = 1000 * 60 // 60 Seconds in milliseconds.
         setTimeout(() => {
-            this.gameState = states.ENDED
+            this.canvas.removeEventListener('mousedown', this.clickHandle);
         }, gameDuration);
     }
 }
