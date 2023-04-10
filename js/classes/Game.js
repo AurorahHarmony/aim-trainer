@@ -16,6 +16,7 @@ export default class Game {
         this.ctx = canvas.getContext('2d');
 
         this.gameState = states.LOADING;
+        this.handles = {};
         this.targets = [];
         this.score = new Score();
 
@@ -30,7 +31,7 @@ export default class Game {
 
     /**
      * Update the canvas size to be the full height and width of the window.
-     */
+    */
     updateCanvasSize() {
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
@@ -108,7 +109,8 @@ export default class Game {
             this.generateTarget();
         }
 
-        this.canvas.addEventListener('mousedown', this.clickHandle.bind(this));
+        this.handles.clickHandle = this.clickHandle.bind(this);
+        this.canvas.addEventListener('mousedown', this.handles.clickHandle);
 
         this.gameState = states.PLAYING;
 
@@ -118,9 +120,18 @@ export default class Game {
         const gameDuration = 1000 * 60 // 60 Seconds in milliseconds.
         setTimeout(() => {
             this.canvas.removeEventListener('mousedown', this.clickHandle);
-            this.gameState = states.ENDED;
-            console.log(this.score.stats());
-        }, gameDuration);
+        setTimeout(this.endGame.bind(this), gameDuration);
+    }
+
+    /**
+     * Ends the game
+     */
+    endGame() {
+        this.canvas.removeEventListener('mousedown', this.handles.clickHandle);
+        delete this.handles.clickHandle;
+
+        this.gameState = states.ENDED;
+        console.log(this.score.stats());
     }
 }
 
