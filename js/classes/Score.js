@@ -45,9 +45,9 @@ export default class Score {
      */
     stats() {
         const total = this.getTotalClicks();
-        const hitPercent = Math.round((this.hits / total) * 100000) / 1000; // Round to 3dp
-        const missPercent = Math.round((this.misses / total) * 100000) / 1000; // Round to 3dp
+        const hitPercent = (Math.round((this.hits / total) * 100000) / 1000) || 0; // Round to 3dp. Use 0 in case of no hits
+        const missPercent = (Math.round((this.misses / total) * 100000) / 1000) || 0;
 
-        return `Total Clicks: ${total}\nHits: ${this.hits} (${hitPercent}%)\nMisses: ${this.misses} (${missPercent}%)`;
+        return `Total Clicks: ${total}\nHits: ${this.hits} (${hitPercent}%)\nMisses: ${this.misses} (${missPercent || 0}%)`;
     }
 }
