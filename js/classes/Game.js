@@ -1,6 +1,7 @@
 /**
  * Game class definition.
  */
+import Menus from './Menus.js';
 import Score from './Score.js';
 import Target from './Target.js';
 import Utility from './Utility.js';
@@ -25,6 +26,8 @@ export default class Game {
         this.targets = [];
         this.score = new Score();
 
+        this.menus = new Menus(this);
+
         // For deltatime
         this.lastTime = null;
         this.currentTime = null;
@@ -32,6 +35,8 @@ export default class Game {
         this.updateCanvasSize();
 
         window.addEventListener('resize', this.updateCanvasSize.bind(this));
+
+        this.menus.showStart();
     }
 
     /**
@@ -134,7 +139,7 @@ export default class Game {
         this.lastTime = new Date().getTime(); // Required to prevent delta time being enormous on first load.
         this.animateTargets();
 
-        const gameDuration = 1000 * 60 // 60 Seconds in milliseconds.
+        const gameDuration = 1000 * 6 // 60 Seconds in milliseconds.
         setTimeout(this.endGame.bind(this), gameDuration);
     }
 
@@ -147,8 +152,7 @@ export default class Game {
 
         this.gameState = states.ENDED;
         requestAnimationFrame(this.clearCanvas.bind(this));
-
-        console.log(this.score.stats());
+        this.menus.showEnd(this.score);
     }
 }
 

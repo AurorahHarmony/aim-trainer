@@ -40,14 +40,18 @@ export default class Score {
     }
 
     /**
-     * Generate a string with current score stats
-     * @returns {string} Score stats
+     * Get the percentage of clicks that were hits
+     * @returns {number} hit percent rounded to 3dp
      */
-    stats() {
-        const total = this.getTotalClicks();
-        const hitPercent = (Math.round((this.hits / total) * 100000) / 1000) || 0; // Round to 3dp. Use 0 in case of no hits
-        const missPercent = (Math.round((this.misses / total) * 100000) / 1000) || 0;
+    getHitPercent() {
+        return (Math.round((this.hits / this.getTotalClicks()) * 100000) / 1000) || 0; // Round to 3dp. Use 0 in case of no hits
+    }
 
-        return `Total Clicks: ${total}\nHits: ${this.hits} (${hitPercent}%)\nMisses: ${this.misses} (${missPercent || 0}%)`;
+    /**
+     * Get the percentage of clicks that were misses
+     * @returns {number} miss percent rounded to 3dp
+     */
+    getMissPercent() {
+        return (Math.round((this.misses / this.getTotalClicks()) * 100000) / 1000) || 0;
     }
 }
