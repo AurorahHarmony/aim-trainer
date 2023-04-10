@@ -2,6 +2,7 @@
  * Game class definition.
  */
 import Target from './Target.js';
+import Utility from './Utility.js';
 
 export default class Game {
 
@@ -24,11 +25,20 @@ export default class Game {
         this.canvas.height = window.innerHeight;
     }
 
+    generateTarget() {
+        const radius = 10;
+        const x = Utility.getRandomInt(radius, this.canvas.width - radius);
+        const y = Utility.getRandomInt(radius, this.canvas.height - radius);
+        const target = new Target(x, y, radius, this.canvas);
+        target.draw();
+    }
+
     /**
      * Start the game.
      */
     startGame() {
-        const target = new Target(this.canvas.width / 2, this.canvas.height / 2, 5, this.canvas);
-        target.draw();
+        for (let i = 0; i < 500; i++) {
+            this.generateTarget();
+        }
     }
 }

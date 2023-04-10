@@ -5,10 +5,10 @@
 export default class Target {
     /**
      * Constructs a new Target instance.
-     * @param {number} x
-     * @param {number} y 
-     * @param {number} radius 
-     * @param {HTMLCanvasElement} canvas 
+     * @param {number} x initial X coordinate of the target 
+     * @param {number} y initial Y coordinate of the target
+     * @param {number} radius Radius of the target
+     * @param {HTMLCanvasElement} canvas
      */
     constructor(x, y, radius, canvas) {
         this.x = x;
