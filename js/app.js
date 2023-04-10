@@ -9,6 +9,15 @@ window.addEventListener("load", function () {
 
     if (canvas) {
         const game = new Game(canvas);
-        game.startGame();
+
+        const startMenu = document.getElementById('startMenu');
+        startMenu.style.display = "block";
+        const startButton = startMenu.querySelector('[name="start"]');
+
+        startButton.addEventListener('click', () => {
+            startMenu.style.display = "none";
+            game.startGame();
+        });
+
     }
 });
